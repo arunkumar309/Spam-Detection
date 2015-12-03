@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 from fuzzywuzzy import fuzz
+=======
+#from fuzzywuzzy import fuzz
+>>>>>>> master
 import csv
 import re
 from datetime import datetime
 user = {}
 features = {}
 tweets = {}
+<<<<<<< HEAD
 with open('pollutersSample.txt','rb') as f:
+=======
+with open('pollutersTweetsSample.txt','rb') as f:
+>>>>>>> master
 	content = csv.reader(f,delimiter = '\t')
 	for row in content:
 		userId, tweetId, tweet, createdAt = row
@@ -24,6 +32,14 @@ with open('pollutersInfoSample.txt','rb') as f:
 		if 'profileInfo' not in user[userId]:
 			user[userId]['profileInfo'] = []
 		user[userId]['profileInfo'].extend([createdAt, followings, followers, tweetCount])
+with open('pollutersFollowingSample.txt', 'rb') as f:
+	content = csv.reader(f, delimiter = '\t')
+	for row in content:
+		userId, followingSeries = row
+		if userId not in user:
+			user[userId] = {}
+			user[userId]['profileInfo'] = ['', '', '', '']
+		user[userId]['profileInfo'].append(followingSeries)
 urlRegex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 hashTagRegex = '#[A-Za-z0-9]+'
 RTRegex = '@[A-Za-zo-9]+'
@@ -37,8 +53,13 @@ for userId in user:
 	tweetsCreatedAt = []
 	features[userId]['tweetTimeDiff'] = []
 	features[userId]['tweetFrequency'] = {}
+<<<<<<< HEAD
 	features[userId]['tweetSimilarity'] = 0
 	tweetSim = []
+=======
+	followingRate = []
+	features[userId]['averageFollowingRate'] = 0
+>>>>>>> master
 	numOfTweets = len(user[userId]['tweetInfo'])
 	for tweetItem in range(numOfTweets):
 		tweet = user[userId]['tweetInfo'][tweetItem][1]
@@ -73,6 +94,7 @@ for userId in user:
 			features[userId]['tweetFrequency'][(year,month,day)] = 1
 		else:
 			features[userId]['tweetFrequency'][(year,month,day)] += 1
+<<<<<<< HEAD
 	for tweet in tweets[userId]:
 		index = tweets[userId].index(tweet)
 		for tweetNext in tweets[userId][index:]:
@@ -80,6 +102,13 @@ for userId in user:
 			tweetSim.append(similarity)
 	if numOfTweets>1:
 		features[userId]['tweetSimilarity'] = sum(tweetSim)/float(((numOfTweets*numOfTweets-1)/2))
+=======
+	followingSeries = user[userId]['profileInfo'][4].split(',')
+	for itemIndex in range(len(followingSeries) - 1):
+		followingRate.append(abs(int(followingSeries[itemIndex]) - \
+			int(followingSeries[itemIndex + 1])))
+	features[userId]['averageFollowingRate'] = sum(followingRate) / len(followingRate)
+>>>>>>> master
 
 for user1 in features:
 	print user1
