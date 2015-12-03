@@ -37,6 +37,8 @@ for userId in user:
 	tweetsCreatedAt = []
 	features[userId]['tweetTimeDiff'] = []
 	features[userId]['tweetFrequency'] = {}
+	features[userId]['tweetSimilarity'] = 0
+	tweetSim = []
 	numOfTweets = len(user[userId]['tweetInfo'])
 	for tweetItem in range(numOfTweets):
 		tweet = user[userId]['tweetInfo'][tweetItem][1]
@@ -71,6 +73,13 @@ for userId in user:
 			features[userId]['tweetFrequency'][(year,month,day)] = 1
 		else:
 			features[userId]['tweetFrequency'][(year,month,day)] += 1
+	for tweet in tweets[userId]:
+		index = tweets[userId].index(tweet)
+		for tweetNext in tweets[userId][index:]:
+			similarity = fuzz.token_set_ratio(tweet, tweetNext)
+			tweetSim.append(similarity)
+	if numOfTweets>1:
+		features[userId]['tweetSimilarity'] = sum(tweetSim)/float(((numOfTweets*numOfTweets-1)/2))
 
 for user1 in features:
 	print user1
