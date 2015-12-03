@@ -50,6 +50,9 @@ for userId in user:
 	followingRate = []
 	features[userId]['averageFollowingRate'] = 0
 	numOfTweets = len(user[userId]['tweetInfo'])
+	features[userId]['followers'] = user[userId]['profileInfo'][2]
+	features[userId]['tweetCount'] = user[userId]['profileInfo'][3]
+	features[userId]['followings'] = user[userId]['profileInfo'][1]
 	for tweetItem in range(numOfTweets):
 		tweet = user[userId]['tweetInfo'][tweetItem][1]
 		tweets[userId].append(tweet)
