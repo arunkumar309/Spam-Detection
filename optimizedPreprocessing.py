@@ -11,8 +11,8 @@ def write_to_file(dictionary):
 	with open('featuresDict.py', 'w') as f:
 		f.write('content = ' + str(dictionary))
 urlRegex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-#with open(location + 'content_polluters_tweets.txt','rb') as f:
-with open(location + 'pollutersSample.txt','rb') as f:
+with open(location + 'content_polluters_tweets.txt','rb') as f:
+#with open(location + 'pollutersSample.txt','rb') as f:
 	content = csv.reader(f,delimiter = '\t')
 	c = 1
 	for row in content:
@@ -90,8 +90,8 @@ for userId in features:
 		else:
 			features[userId]['tweetFrequency'][(year,month,day)] += 1
 '''
-#with open(location + 'content_polluters.txt','rb') as f:
-with open(location + 'pollutersInfoSample.txt','rb') as f:
+with open(location + 'content_polluters.txt','rb') as f:
+#with open(location + 'pollutersInfoSample.txt','rb') as f:
 	content = csv.reader(f,delimiter = '\t')
 	c = 1
 	for row in content:
@@ -106,8 +106,8 @@ with open(location + 'pollutersInfoSample.txt','rb') as f:
 		features[userId]['followerFollowingRatio'] = int(followers) / float(followings)
 		features[userId]['tweetCount'] = tweetCount
 
-#with open(location + 'content_polluters_followings.txt', 'rb') as f:
-with open(location + 'pollutersFollowingSample.txt','rb') as f:
+with open(location + 'content_polluters_followings.txt', 'rb') as f:
+#with open(location + 'pollutersFollowingSample.txt','rb') as f:
 	content = csv.reader(f, delimiter = '\t')
 	c = 1
 	for row in content:
