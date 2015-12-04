@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 features = {}
 tweets = {}
-location = ""
+location = "/Users/kannanravindran/Desktop/spammers_detection/Social Honeypot method/social_honeypot_icwsm_2011/"
 
 def write_to_file(dictionary):
 	print 'Inside write_to_file'
@@ -33,6 +33,7 @@ with open(location + 'content_polluters_tweets.txt','rb') as f:
 			features[userId]['tweetTimeDiff'] = []
 			features[userId]['tweetFrequency'] = {}
 			features[userId]['tweetTimeDiff'] = []
+			features[userId]['tweetSimilarity'] = 0
 		tweets[userId].append(tweet)
 		createdAtObj = datetime.strptime(createdAt, '%Y-%m-%d %H:%M:%S')
 		urls = re.findall(urlRegex,tweet)
@@ -51,19 +52,23 @@ with open(location + 'content_polluters_tweets.txt','rb') as f:
 		features[userId]['retweetsCount'] += retweetsCount
 		features[userId]['numOfUrlTweets'] += numOfUrlTweets
 		features[userId]['tweetsCreatedAt'].append(createdAtObj)
-
+c = 1
 for userId in features:
-	for itemIndex in range(len(features[userId]['tweetsCreatedAt'])):
-		if itemIndex != len(features[userId]['tweetsCreatedAt'])-1:
-			features[userId]['tweetTimeDiff'].append(\
-				abs(features[userId]['tweetsCreatedAt'][itemIndex] -\
-				features[userId]['tweetsCreatedAt'][itemIndex+1]).total_seconds())
-		timeObj = features[userId]['tweetsCreatedAt'][itemIndex]
+	print "similarity ", c
+	temp = features[userId]
+	for itemIndex in range(len(temp['tweetsCreatedAt'])):
+		
+		# if itemIndex != len(temp['tweetsCreatedAt'])-1:
+		# 	features[userId]['tweetTimeDiff'].append(\
+		# 		abs(temp['tweetsCreatedAt'][itemIndex] -\
+		# 		temp['tweetsCreatedAt'][itemIndex+1]).total_seconds())
+		timeObj = temp['tweetsCreatedAt'][itemIndex]
 		year, month, day = timeObj.date().year, timeObj.date().month, timeObj.date().day
 		if (year,month,day) not in features[userId]['tweetFrequency']:
 			features[userId]['tweetFrequency'][(year,month,day)] = 1
 		else:
 			features[userId]['tweetFrequency'][(year,month,day)] += 1
+	'''
 	tweetSim  = []
 	for tweet in tweets[userId]:
 		index = tweets[userId].index(tweet)
@@ -73,6 +78,8 @@ for userId in features:
 	numOfTweets = len(tweets[userId])
 	if numOfTweets > 1:
 			features[userId]['tweetSimilarity'] = sum(tweetSim)/float(((numOfTweets*numOfTweets-1)/2))
+	'''
+	c += 1
 '''
 for userId in features:
 	for timeObj in features[userId]['tweetsCreatedAt']:
@@ -103,7 +110,10 @@ with open(location + 'content_polluters.txt','rb') as f:
 		features[userId]['screenNameLength'] = screenNameLength
 		features[userId]['followers'] = followers
 		features[userId]['followings'] = followings
-		features[userId]['followerFollowingRatio'] = int(followers) / float(followings)
+		if float(followings) != 0:
+			features[userId]['followerFollowingRatio'] = int(followers) / float(followings)
+		else:
+			features[userId]['followerFollowingRatio'] = 0
 		features[userId]['tweetCount'] = tweetCount
 
 with open(location + 'content_polluters_followings.txt', 'rb') as f:
