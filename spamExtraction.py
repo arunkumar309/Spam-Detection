@@ -1,5 +1,6 @@
-from tweetsSample import content
-from legitTweetsSample import content as legitTweets
+#Remove '_sample' from the frist two from import statements to run on the complete dataset
+from polluters_tweets_sample import content as pollutersTweets
+from legit_tweets_sample import content as legitTweets
 from nltk.tokenize import TweetTokenizer
 from nltk.corpus import stopwords
 import nltk
@@ -82,8 +83,8 @@ tweetTokens = []
 tweetsUniqueString = ''
 matchedSpamFreq = {}
 if __name__ == '__main__':
-	for userId in content:
-		tweets = content[userId]
+	for userId in pollutersTweets:
+		tweets = pollutersTweets[userId]
 		tweetsUniqueString += getUniqueWords(tweets)
 		tweetsUniqueString += ' '
 	getSpamFreq(tweetsUniqueString)
