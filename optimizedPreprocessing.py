@@ -4,13 +4,15 @@ import re
 from datetime import datetime
 features = {}
 tweets = {}
-location = "/Users/kannanravindran/Desktop/spammers_detection/Social Honeypot method/social_honeypot_icwsm_2011/"
+location = ''
 
-def write_to_file(dictionary):
+def write_to_file(dictionary, dictname):
 	print 'Inside write_to_file'
-	with open('featuresDict.py', 'w') as f:
+	with open(dictname + '.py', 'w') as f:
 		f.write('content = ' + str(dictionary))
 urlRegex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+replyRegex = '(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9]+)'
+hashtagRegex = '(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([A-Za-z]+[A-Za-z0-9]+)'
 with open(location + 'content_polluters_tweets.txt','rb') as f:
 #with open(location + 'pollutersSample.txt','rb') as f:
 	content = csv.reader(f,delimiter = '\t')
@@ -32,18 +34,22 @@ with open(location + 'content_polluters_tweets.txt','rb') as f:
 			features[userId]['tweetsCreatedAt'] = []
 			features[userId]['tweetTimeDiff'] = []
 			features[userId]['tweetFrequency'] = {}
-			features[userId]['tweetTimeDiff'] = []
 			features[userId]['tweetSimilarity'] = 0
+			retweets = []
 		tweets[userId].append(tweet)
 		createdAtObj = datetime.strptime(createdAt, '%Y-%m-%d %H:%M:%S')
 		urls = re.findall(urlRegex,tweet)
-		hashtags = set(tag for tag in tweet.split() if tag.startswith('#'))
-		replies = set(reply for reply in tweet.split() if reply.startswith('@'))
-		retweets = set(retweet for retweet in tweet.split() if retweet.startswith('RT'))
+		hashtags = re.findall(hashtagRegex, tweet)
+		replies = re.findall(replyRegex, tweet)
+		retweets = re.search(r'(RT|retweet|from|via)(?:\b\W*@(\w+))+', tweet)
 		urlsCount = len(urls)
 		hashtagsCount = len(hashtags)
 		repliesCount = len(replies)
-		retweetsCount = len(retweets)
+		if isinstance(retweets, tuple):
+			retweets = retweets.groups()
+			retweetsCount = len(retweets)/2
+		else:
+			retweetsCount = 0
 		urlsList.append(urlsCount)
 		numOfUrlTweets = sum(1 for url in urlsList if url>0)
 		features[userId]['urlsCount'] += urlsCount
@@ -133,7 +139,8 @@ with open(location + 'content_polluters_followings.txt', 'rb') as f:
 			followingRate.append(abs(int(followingSeries[itemIndex]) - \
 				int(followingSeries[itemIndex + 1])))
 			features[userId]['averageFollowingRate'] = sum(followingRate) / len(followingRate)
-write_to_file(features)
+write_to_file(features, 'features')
+write_to_file(tweets, 'tweets')
 
 with open('FeaturesSelected.csv', 'wb') as f:
 	writer = csv.writer(f, delimiter = ',', quoting=csv.QUOTE_MINIMAL)
