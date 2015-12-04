@@ -98,7 +98,6 @@ for userId in user:
 	features[userId]['repliesCount'] = sum(repliesList)
 	features[userId]['retweetsCount'] = sum(retweetsList)
 	features[userId]['numOfUrlTweets'] = sum(1 for url in urlsList if url>0)
-	#features[userId]['tweetsCreatedAt'].reverse()
 	for tweetTimes in tweetsCreatedAt[:-1]:
 		profileCreateTime = datetime.strptime(user[userId]['profileInfo'][0], '%Y-%m-%d %H:%M:%S')
 		index = tweetsCreatedAt.index(tweetTimes)
