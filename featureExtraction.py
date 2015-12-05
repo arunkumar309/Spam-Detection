@@ -57,7 +57,7 @@ def write_csv(dictionary, filename):
 			writer.writerow(row)
 
 def toString(unicodeData):
-	stringOut = unicodedata.normalize('NFKD',unicodeData).encode('ascii','ignore')
+	stringOut = unicodedata.normalize('NFKD',unicode(unicodeData)).encode('ascii','ignore')
 	return stringOut
 
 def initialize_features(category, userId):
@@ -257,7 +257,7 @@ def getMostTweetedDate(mostTweeted,category):
 	mostTweeted[category] = {}
 	for userId in features[category]:
 		mostTweeted[category][userId] = {}
-		print features[category][userId]['tweetFrequency']
+		#print features[category][userId]['tweetFrequency']
 		mostCommon = nltk.FreqDist(features[category][userId]['tweetFrequency'])\
 		.most_common(1)
 		if len(mostCommon) > 0:
@@ -287,11 +287,13 @@ def getToStemTweets(tweetsToStem,mostTweeted,category):
 
 def stemming(tweetsToCheck,tweetsToStem,category):
 	stemmer = SnowballStemmer('english')
+	punctuations = string.punctuation
 	tweetsToCheck[category] = {}
 	for userId in tweetsToStem[category]:
 		tweetsList = tweetsToStem[category][userId]
 		tweetsToCheck[category][userId] = []
 		for tweet in tweetsList:
+			tweet = ''.join(ch for ch in tweet if ch not in punctuations)
 			tweet = tweet.lower().split()
 			tweet = [word for word in tweet if word not in stopwords]
 			tweet = ' '.join(word for word in tweet)
