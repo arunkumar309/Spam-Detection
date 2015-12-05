@@ -19,6 +19,7 @@ sys.setdefaultencoding('utf8')
 features = {}
 tweets = {}
 #location = 'C:\Users\Harini Ravichandran\Documents\ASU Sem 1\Social Media Mining - 598\STEM\social_honeypot_icwsm_2011\\'
+#location = "/Users/kannanravindran/Desktop/spammers_detection/Social Honeypot method/social_honeypot_icwsm_2011/"
 location = ''
 test = False
 if test == False:
