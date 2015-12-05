@@ -18,8 +18,9 @@ sys.setdefaultencoding('utf8')
 
 features = {}
 tweets = {}
-location = 'C:\Users\Harini Ravichandran\Documents\ASU Sem 1\Social Media Mining - 598\STEM\social_honeypot_icwsm_2011\\'
-test = False
+#location = 'C:\Users\Harini Ravichandran\Documents\ASU Sem 1\Social Media Mining - 598\STEM\social_honeypot_icwsm_2011\\'
+location = ''
+test = True
 if test == False:
 	content_files = ['content_polluters_tweets.txt', 'legitimate_users_tweets.txt']
 	profile_files = ['content_polluters.txt', 'legitimate_users.txt']
@@ -143,7 +144,8 @@ def extract_profile_features(location, filename, category):
 			c += 1
 			userId, createdAt, followings, followers, tweetCount, screenNameLength = row[0], row[1], row[3],row[4],row[5], row[6]
 			if userId not in features[category]:
-				features[category][userId] = {}
+				initialize_features(category,userId)
+				#features[category][userId] = {}
 			features[category][userId]['screenNameLength'] = int(screenNameLength)
 			features[category][userId]['followers'] = int(followers)
 			features[category][userId]['followings'] = int(followings)
@@ -164,7 +166,8 @@ def extract_following_rate(location, filename, category):
 			c += 1
 			userId, followingSeries = row
 			if userId not in features[category]:
-				features[category][userId] = {}
+				initialize_features(category, userId)
+				#features[category][userId] = {}
 			followingRate = []
 			features[category][userId]['averageFollowingRate'] = 0
 			followingSeries = followingSeries.split(',')
@@ -254,12 +257,17 @@ def getMostTweetedDate(mostTweeted,category):
 	mostTweeted[category] = {}
 	for userId in features[category]:
 		mostTweeted[category][userId] = {}
+		print features[category][userId]['tweetFrequency']
 		mostCommon = nltk.FreqDist(features[category][userId]['tweetFrequency'])\
 		.most_common(1)
-		mcYear, mcMonth, mcDay = mostCommon[0][0][0], mostCommon[0][0][1],mostCommon[0][0]\
-		[2]
-		mostTweeted[category][userId]['YMD'] = (mcYear,mcMonth,mcDay)
-		mostTweeted[category][userId]['count'] = mostCommon[0][1]
+		if len(mostCommon) > 0:
+			mcYear, mcMonth, mcDay = mostCommon[0][0][0], mostCommon[0][0][1],mostCommon[0][0]\
+			[2]
+			mostTweeted[category][userId]['YMD'] = (mcYear,mcMonth,mcDay)
+			mostTweeted[category][userId]['count'] = mostCommon[0][1]
+		else:
+			mostTweeted[category][userId]['YMD'] = ()
+			mostTweeted[category][userId]['count'] = 0
 	return mostTweeted
 
 def getToStemTweets(tweetsToStem,mostTweeted,category):
