@@ -19,7 +19,7 @@ sys.setdefaultencoding('utf8')
 features = {}
 tweets = {}
 location = ''
-test = True
+test = False
 if test == False:
 	content_files = ['content_polluters_tweets.txt', 'legitimate_users_tweets.txt']
 	profile_files = ['content_polluters.txt', 'legitimate_users.txt']
