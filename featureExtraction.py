@@ -20,7 +20,7 @@ features = {}
 tweets = {}
 #location = 'C:\Users\Harini Ravichandran\Documents\ASU Sem 1\Social Media Mining - 598\STEM\social_honeypot_icwsm_2011\\'
 location = ''
-test = True
+test = False
 if test == False:
 	content_files = ['content_polluters_tweets.txt', 'legitimate_users_tweets.txt']
 	profile_files = ['content_polluters.txt', 'legitimate_users.txt']
