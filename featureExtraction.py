@@ -74,6 +74,7 @@ def initialize_features(category, userId):
 
 def get_tweets_per_day(category):
 	c = 1
+	global features
 	for userId in features[category]:
 		print "tweetFrequency ", c
 		temp = features[category][userId]
@@ -292,6 +293,7 @@ def stemming(tweetsToCheck,tweetsToStem,category):
 	return tweetsToCheck
 
 def extract_similarities():
+	global features
 	mostTweeted = {}
 	tweetsToStem = {}
 	tweetsToCheck = {}
