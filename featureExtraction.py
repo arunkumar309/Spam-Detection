@@ -18,7 +18,7 @@ sys.setdefaultencoding('utf8')
 
 features = {}
 tweets = {}
-location = ''
+location = 'C:\Users\Harini Ravichandran\Documents\ASU Sem 1\Social Media Mining - 598\STEM\social_honeypot_icwsm_2011\\'
 test = False
 if test == False:
 	content_files = ['content_polluters_tweets.txt', 'legitimate_users_tweets.txt']
@@ -129,7 +129,7 @@ def extract_content_features(location, filename, category):
 			print "tweets count ", c 
 			c += 1
 			extract_tweet_features(row, category)
-			get_tweets_per_day(category)
+		get_tweets_per_day(category)
 
 def extract_profile_features(location, filename, category):
 	global features
@@ -222,7 +222,10 @@ def get_spam_words_frequency(spamWordsDict, category):
 		for word in tweetWords:
 			if word in spamWordsDict:
 				matchedSpamCount += tweetWords[word]
-		features[category][userId]['spamWordsRatio'] = matchedSpamCount / float(totalWords)
+		if float(totalWords) != 0:
+			features[category][userId]['spamWordsRatio'] = matchedSpamCount / float(totalWords)
+		else:
+			features[category][userId]['spamWordsRatio'] = 0
 
 
 def extract_spam():
@@ -233,7 +236,10 @@ def extract_spam():
 	stopwords = [toString(word).lower() for word in stopwords]
 	tweetTokens = []
 	tweetsUniqueString = ''
+	c = 1
 	for userId in tweets['spammers']:
+		print "spam words ", c
+		c += 1
 		tweetsList = tweets['spammers'][userId]
 		tweetsUniqueString += get_unique_words(tweetsList)
 		tweetsUniqueString += ' '
@@ -243,6 +249,7 @@ def extract_spam():
 		get_spam_words_frequency(spamWordsDict, category)
 
 def getMostTweetedDate(mostTweeted,category):
+	global features
 	mostTweeted[category] = {}
 	for userId in features[category]:
 		mostTweeted[category][userId] = {}
@@ -255,7 +262,7 @@ def getMostTweetedDate(mostTweeted,category):
 	return mostTweeted
 
 def getToStemTweets(tweetsToStem,mostTweeted,category):
-	global tweets
+	global tweets, features
 	tweetsToStem[category] = {}
 	for userId in features[category]:
 		tweetsToStem[category][userId] = []
@@ -292,7 +299,10 @@ def extract_similarities():
 		mostTweeted = getMostTweetedDate(mostTweeted,category)
 		tweetsToStem = getToStemTweets(tweetsToStem,mostTweeted,category)
 		tweetsToCheck = stemming(tweetsToCheck,tweetsToStem,category)
+		c = 1
 		for userId in tweetsToCheck[category]:
+			print "similarity ", c
+			c += 1
 			tweetSim  = []
 			#print c, len(tweetsToCheck[category][userId])
 			for tweet in tweetsToCheck[category][userId]:
